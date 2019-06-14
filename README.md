@@ -23,4 +23,5 @@ All documentation regarding the usage of the API, including requests, responses 
     Standard error responses (Overriding some of the spring exceptions and using ControllerAdvice for unknown errors)
     Unit testing
     Sonarqube report
+    Docker(First time creating an image from scratch. I wasn't able to push to a repository, but the 'gradle build docker' command has worked, so I think its configuration is working properly, at least)
 

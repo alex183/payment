@@ -7,6 +7,7 @@ apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.gorylenko.gradle-git-properties"
+apply plugin: 'com.palantir.docker'
 
 buildscript {
 	ext {
@@ -15,6 +16,9 @@ buildscript {
 		springDependencyManagementVersion = '1.0.6.RELEASE'
 	}
 	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 		mavenCentral()
 		jcenter()
 	}
@@ -23,8 +27,11 @@ buildscript {
 		classpath group: 'io.spring.gradle', name: 'dependency-management-plugin', version: "${springDependencyManagementVersion}"
 		classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: "${sonarVersion}"
 		classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.0.0-beta1"
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
 	}
 }
+
+group = 'wirecard'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -35,6 +42,9 @@ jar {
 }
 
 repositories {
+	maven {
+		url "https://plugins.gradle.org/m2/"
+	}
 	mavenCentral()
 	jcenter()
 }
@@ -90,4 +100,10 @@ sonarqube {
 
 springBoot {
 	buildInfo()
+}
+
+docker {
+	name "${project.group}/${jar.baseName}"
+	files jar.archivePath
+	buildArgs(['JAR_FILE': "${jar.archiveName}"])
 }

@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static com.wirecard.payment.mock.Mocks.getPaymentReceiptMock;
 import static com.wirecard.payment.mock.Mocks.getReceiptEntityMock;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 public class ReceiptEntityConverterTest {
@@ -47,7 +48,7 @@ public class ReceiptEntityConverterTest {
         assertEquals(paymentReceipt.getId(),receiptEntity.getId());
         assertEquals(paymentReceipt.getStatus(),receiptEntity.getStatus());
         assertEquals(paymentReceipt.getCreationDate(),receiptEntity.getCreationDate());
-        assertEquals(paymentReceipt.getLastModifiedDate(),receiptEntity.getLastModifiedDate());
+        assertNotNull(paymentReceipt.getLastModifiedDate());
         assertEquals(paymentReceipt.getClient().getId(),receiptEntity.getClient().getId());
         assertEquals(paymentReceipt.getBuyer().getCpf(),receiptEntity.getBuyer().getCpf());
         assertEquals(paymentReceipt.getBuyer().getEmail(),receiptEntity.getBuyer().getEmail());

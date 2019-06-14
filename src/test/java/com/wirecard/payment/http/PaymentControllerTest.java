@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 
+import static com.wirecard.payment.mock.Mocks.getPaymentReceiptMock;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -144,6 +145,8 @@ public class PaymentControllerTest {
     public void okResponseOnPostPayment() throws Exception{
 
         ObjectMapper objectMapper= new ObjectMapper();
+
+        when(receiptConverter.convertToUseCase(any())).thenReturn(getPaymentReceiptMock());
 
         String body = objectMapper.writeValueAsString(PaymentRequest.builder()
                 .buyer(Buyer.builder()

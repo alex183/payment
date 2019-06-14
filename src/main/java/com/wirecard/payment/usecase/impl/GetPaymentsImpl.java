@@ -28,7 +28,7 @@ public class GetPaymentsImpl implements GetPayments {
 
         List<PaymentReceipt> paymentReceipts = receiptEntityConverter.convertToUseCase(receiptEntities);
 
-        if(isNull(paymentReceipts) | paymentReceipts.isEmpty()) throw new PaymentsNotFoundException(
+        if(isNull(paymentReceipts) || paymentReceipts.isEmpty()) throw new PaymentsNotFoundException(
                 errorMessagesProperties.getPaymentsNotFound().getUserMessage(),
                 errorMessagesProperties.getPaymentsNotFound().getDeveloperMessage()
         );
