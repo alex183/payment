@@ -24,7 +24,7 @@ public class ReceiptEntity {
     private Buyer buyer;
     private Payment payment;
     private LocalDateTime creationDate;
-    private LocalDateTime updateDate;
+    private LocalDateTime lastModifiedDate;
 
 
 }

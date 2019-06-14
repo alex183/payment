@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Configuration
 @EnableMongoAuditing
-public class MongoConfig {
+public class MongoConfiguration {
 	private static final String MONGO_DB_URL = "localhost";
 	private static final String MONGO_DB_NAME = "embeded_db_payment";
 	@Bean

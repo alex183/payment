@@ -1,5 +1,6 @@
 package com.wirecard.payment.http.data.response;
 
+import com.wirecard.payment.entity.enumerator.CardIssuer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +17,5 @@ public class Card {
     private String number;
     private LocalDate expirationDate;
     private String cvv;
+    private CardIssuer issuer;
 }

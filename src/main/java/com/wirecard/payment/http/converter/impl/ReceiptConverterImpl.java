@@ -1,6 +1,7 @@
 package com.wirecard.payment.http.converter.impl;
 
 import com.wirecard.payment.entity.*;
+import com.wirecard.payment.entity.enumerator.CardIssuer;
 import com.wirecard.payment.entity.enumerator.PaymentType;
 import com.wirecard.payment.http.converter.ReceiptConverter;
 import com.wirecard.payment.http.data.request.PaymentRequest;
@@ -54,6 +55,7 @@ public class ReceiptConverterImpl implements ReceiptConverter {
                 .holdersName(cardRequest.getHoldersName())
                 .cvv(cardRequest.getCvv())
                 .expirationDate(cardRequest.getExpirationDate())
+                .issuer(CardIssuer.getCardIssuer(cardRequest.getNumber()))
                 .build();
     }
 

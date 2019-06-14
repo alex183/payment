@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReceiptResponse {
+public class PaymentReceiptResponse {
     private String id;
     private ReceiptStatus status;
     private Client client;

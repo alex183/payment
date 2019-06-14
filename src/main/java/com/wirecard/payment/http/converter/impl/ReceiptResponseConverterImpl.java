@@ -18,10 +18,10 @@ import static java.util.stream.Collectors.toList;
 public class ReceiptResponseConverterImpl implements ReceiptResponseConverter {
 
     @Override
-    public ReceiptResponse convertToResponse(PaymentReceipt paymentReceipt) {
+    public PaymentReceiptResponse convertToResponse(PaymentReceipt paymentReceipt) {
         if(isNull(paymentReceipt)) return null;
 
-       return ReceiptResponse.builder()
+       return PaymentReceiptResponse.builder()
                .id(paymentReceipt.getId())
                .status(paymentReceipt.getStatus())
                .client(buildClient(paymentReceipt.getClient()))
@@ -33,7 +33,7 @@ public class ReceiptResponseConverterImpl implements ReceiptResponseConverter {
     }
 
     @Override
-    public List<ReceiptResponse> convertToResponse(List<PaymentReceipt> receipts) {
+    public List<PaymentReceiptResponse> convertToResponse(List<PaymentReceipt> receipts) {
         if(isNull(receipts)) return null;
 
         return receipts.stream().map(this::convertToResponse).collect(toList());
@@ -69,6 +69,7 @@ public class ReceiptResponseConverterImpl implements ReceiptResponseConverter {
                 .holdersName(card.getHoldersName())
                 .cvv(card.getCvv())
                 .expirationDate(card.getExpirationDate())
+                .issuer(card.getIssuer())
                 .build();
     }
 

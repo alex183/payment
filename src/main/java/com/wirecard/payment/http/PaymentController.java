@@ -1,6 +1,7 @@
 package com.wirecard.payment.http;
 
 import com.wirecard.payment.entity.PaymentReceipt;
+import com.wirecard.payment.entity.enumerator.CardIssuer;
 import com.wirecard.payment.exception.MockedException;
 import com.wirecard.payment.exception.PaymentNotFoundException;
 import com.wirecard.payment.exception.PaymentTypeNotYetSupportedException;
@@ -14,15 +15,20 @@ import com.wirecard.payment.usecase.GetPayments;
 import com.wirecard.payment.usecase.Pay;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.wirecard.payment.entity.enumerator.PaymentType.CREDIT_CARD;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/payment")
+@RequestMapping(value = "/payments",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
 public class PaymentController {
 
     private final Pay pay;
@@ -35,11 +41,21 @@ public class PaymentController {
     @ResponseBody
     public ResponseEntity<Object> pay(
             @RequestHeader(name = "origin") String origin,
+            //This simulates the session id from the user. It would be validated in order grand access only to allowed
+            // users(it would be better to intercept with a lib imported all api's, so its not implemented one by one)
             @RequestHeader(name = "session-id") String sessionId,
             @Valid @RequestBody PaymentRequest paymentRequest) {
 
         try{
             PaymentReceipt payment = receiptConverter.convertToUseCase(paymentRequest);
+
+            if(CREDIT_CARD.equals(payment.getPayment().getType())
+                    && CardIssuer.UNKNOWN.equals(payment.getPayment().getCard().getIssuer())){
+                return new ResponseEntity<>(ErrorResponse.builder()
+                        .userMessage("Validation Failed")
+                        .developerMessage("Invalid credit dard issuer")
+                        .build(), HttpStatus.BAD_REQUEST);
+            }
 
             PaymentReceipt paymentReceipt = pay.execute(payment);
 

@@ -20,7 +20,7 @@ public class Card {
     private String holdersName;
     @NotNull
     @Size(min = 16, max = 16)
-    @Pattern(regexp = "\\d+", message = "Invalid card's number. Only numbers are allowed")
+    @Pattern(regexp = "[3-6]\\d+", message = "Invalid card's number. Only numbers are allowed. Must start with either 3,4,5 or 6.")
     private String number;
     @NotNull
     private LocalDate expirationDate;

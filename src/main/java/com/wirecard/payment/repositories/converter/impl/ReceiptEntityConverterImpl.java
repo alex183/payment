@@ -28,7 +28,7 @@ public class ReceiptEntityConverterImpl implements ReceiptEntityConverter {
                .buyer(buildBuyer(paymentReceipt.getBuyer()))
                .payment(buildPayment(paymentReceipt.getPayment()))
                .creationDate(nonNull(paymentReceipt.getCreationDate())?paymentReceipt.getCreationDate(): LocalDateTime.now())
-               .updateDate(LocalDateTime.now())
+               .lastModifiedDate(LocalDateTime.now())
                .build();
     }
 
@@ -43,7 +43,7 @@ public class ReceiptEntityConverterImpl implements ReceiptEntityConverter {
                 .buyer(buildBuyer(receiptEntity.getBuyer()))
                 .payment(buildPayment(receiptEntity.getPayment()))
                 .creationDate(receiptEntity.getCreationDate())
-                .lastModifiedDate(receiptEntity.getUpdateDate())
+                .lastModifiedDate(receiptEntity.getLastModifiedDate())
                 .build();
     }
 
@@ -94,6 +94,7 @@ public class ReceiptEntityConverterImpl implements ReceiptEntityConverter {
                 .holdersName(card.getHoldersName())
                 .cvv(card.getCvv())
                 .expirationDate(card.getExpirationDate())
+                .issuer(card.getIssuer())
                 .build();
     }
 
@@ -127,6 +128,7 @@ public class ReceiptEntityConverterImpl implements ReceiptEntityConverter {
                 .holdersName(card.getHoldersName())
                 .cvv(card.getCvv())
                 .expirationDate(card.getExpirationDate())
+                .issuer(card.getIssuer())
                 .build();
     }
 
