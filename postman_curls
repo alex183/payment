@@ -1,0 +1,69 @@
+CREDIT CARD POST CURL
+curl -X POST \
+  localhost:8080/payments \
+  -H 'Content-Type: application/json' \
+  -H 'origin: front' \
+  -H 'session-id: 112312jasdja' \
+  -d '{
+	"client":{
+		"id": "1234"
+	},
+	"buyer":{
+		"name": "Ale da Silva",
+		"email": "olar@oias.com.br",
+		"cpf": "37594386876"
+	},
+	"payment":{
+		"amount": 15.43,
+		"type": "CREDIT_CARD",
+		"card":{
+			"holdersName": "ALEXANDRE A TESSAROTTO",
+			"number": "5234123487651234",
+			"expirationDate": "2019-05-31",
+			"cvv": "123"
+
+		},
+		"boleto":{
+			"number": "11273912739812738912738917238917238917123121"
+		}
+	}
+}'
+
+BOLETO POST CURL
+curl -X POST \
+  localhost:8080/payments \
+  -H 'Content-Type: application/json' \
+  -H 'origin: front' \
+  -H 'session-id: 112312jasdja' \
+  -d '{
+	"client":{
+		"id": "1234"
+	},
+	"buyer":{
+		"name": "Ale da Silva",
+		"email": "olar@oias.com.br",
+		"cpf": "37594386876"
+	},
+	"payment":{
+		"amount": 15.43,
+		"type": "BOLETO",
+		"boleto":{
+			"number": "11273912739812738912738917238917238917123121"
+		}
+	}
+}'
+
+GET ALL PAYMENTS
+curl -X GET \
+  http://localhost:8080/payments \
+  -H 'Content-Type: application/json' \
+  -H 'Host: localhost:8080' \
+  -H 'origin: front' \
+  -H 'session-id: 112312jasdja'
+
+GET PAYMENT BY ID
+curl -X GET \
+http://localhost:8080/payments/1234 \
+-H 'Content-Type: application/json' \
+-H 'origin: front' \
+-H 'session-id: 112312jasdja'

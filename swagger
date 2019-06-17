@@ -1,0 +1,345 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  description: Payments endpoint from Wirecard
+  title: Payment API
+paths:
+  /payments:
+    post:
+      tags:
+        - Payment
+      summary: >-
+        Pay with either Credit Card or Boleto
+      parameters:
+        - $ref: '#/components/parameters/ContentType'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/session-id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '412':
+          description: Precondition failed error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Business Error - Payment Type not yet allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            Unmapped Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Payment
+      summary: >-
+        Gets all payment receipts
+      parameters:
+        - $ref: '#/components/parameters/ContentType'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/session-id'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReceiptResponse'
+        '404':
+          description: Not Found error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            Unmapped Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/payments/{paymentReceiptId}':
+     get:
+      tags:
+        - Payment
+      summary: >-
+        Gets payment receipt by ID
+      parameters:
+        - $ref: '#/components/parameters/ContentType'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/session-id'
+        - name: paymentReceiptId
+          in: path
+          description: Payment Receipt ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptResponse'
+        '404':
+          description: Not Found error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            Unmapped Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+servers:
+  - url: 'http://localhost:8080'
+    description: Development environment
+    variables:
+      customerId:
+        default: demo
+        description: Customer ID assigned by the service provider
+      port:
+        default: '8080'
+components:
+  parameters:
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+    origin:
+      name: origin
+      in: header
+      required: true
+      schema:
+        type: string
+    session-id:
+      name: session-id
+      in: header
+      required: true
+      schema:
+        type: string
+  schemas:
+    Error:
+      type: object
+      properties:
+        userMessage:
+          type: string
+        developerMessage:
+          type: string
+        errors:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+              message:
+                type: string
+    PaymentRequest:
+      type: object
+      properties:
+        client:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 1234
+              description: Client's ID
+        buyer:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Ale da Silva
+              description: Buyer's name
+            email:
+              type: string
+              example: ale@gmail.com
+              description: Buyer's e-mail
+            cpf:
+              type: string
+              example: 37594386876
+              description: Buyer's CPF
+        payment:
+          type: object
+          properties:
+            amount:
+              type: number
+              example: 349.99
+            type:
+              type: string
+              enum:
+              - CREDIT_CARD
+              - BOLETO
+              - VOUCHER
+            card:
+              type: object
+              properties:
+                holdersName:
+                  type: string
+                  example: "Luis da Silva"
+                  description: Holder's name
+                number:
+                  type: string
+                  minLength: 16
+                  maxLength: 16
+                  example: 5234123487651234
+                  description: Card's number
+                expirationDate:
+                  type: string
+                  format: LocalDate - ISO
+                  example: "2019-06-30"
+                  description: Expiration date
+                cvv:
+                  type: string
+                  minLength: 3
+                  maxLength: 3
+                  example: 321
+                  description: CVV's number
+            boleto:
+              type: object
+              properties:
+                number:
+                  type: string
+                  minLength: 44
+                  maxLength: 44
+                  example: 00190000090280058800291081042177478890000031693
+                  description: Boleto's number
+    ReceiptResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "asas-xmxia112"
+          description: Generated receipt ID
+        status:
+          type: string
+          enum:
+            - INITIATED
+            - IN_PROCESS
+            - ERROR
+            - COMPLETED
+          description: Receipt status
+        creationDate:
+          type: string
+          format: LocalDateTime - ISO
+          example: "2019-06-30T10:44:59.416"
+          description: Creation date
+        lastModifiedDate:
+          type: string
+          format: LocalDateTime - ISO
+          example: "2019-06-30T10:44:59.489"
+          description: Last Modified date
+        client:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 1234
+              description: Client's ID
+        buyer:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Ale da Silva
+              description: Buyer's name
+            email:
+              type: string
+              example: ale@gmail.com
+              description: Buyer's e-mail
+            cpf:
+              type: string
+              example: 37594386876
+              description: Buyer's CPF
+        payment:
+          type: object
+          properties:
+            amount:
+              type: number
+              example: 349.99
+            type:
+              type: string
+              enum:
+              - CREDIT_CARD
+              - BOLETO
+              - VOUCHER
+            card:
+              type: object
+              properties:
+                holdersName:
+                  type: string
+                  example: "Luis da Silva"
+                  description: Holder's name
+                number:
+                  type: string
+                  minLength: 16
+                  maxLength: 16
+                  example: 5234123487651234
+                  description: Card's number
+                expirationDate:
+                  type: string
+                  format: LocalDate - ISO
+                  example: "2019-06-30"
+                  description: Expiration date
+                cvv:
+                  type: string
+                  minLength: 3
+                  maxLength: 3
+                  example: 321
+                  description: CVV's number
+            boleto:
+              type: object
+              properties:
+                number:
+                  type: string
+                  minLength: 44
+                  maxLength: 44
+                  example: 00190000090280058800291081042177478890000031693
+                  description: Boleto's number
