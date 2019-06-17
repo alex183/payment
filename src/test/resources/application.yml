@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: payment
+    serviceId: payment
+  jackson:
+      serialization:
+         WRITE_DATES_AS_TIMESTAMPS: false
+      default-property-inclusion: NON_EMPTY
+
+logbook:
+    exclude:
+        - /auditevents
+        - /beans
+        - /conditions
+        - /configprops
+        - /env
+        - /flyway
+        - /health
+        - /heapdump
+        - /info
+        - /liquibase
+        - /logfile
+        - /loggers
+        - /metrics
+        - /prometheus
+        - /scheduledtasks
+        - /sessions
+        - /shutdown
+        - /threaddump
+        - /health
+        - /info
+        - /metrics
+        - /trace
+        - /mappings
+    filter.enabled: true
+    format.style: json
+    obfuscate:
+        headers:
+            - Authorization
+            - X-Secret
+            - senha
+        parameters:
+           - access_token
+           - open_id
+           - id_token
+           - tokenAcesso
+           - senha
+           - password
+           - refreshToken
+           - refresh_token
+           - accessToken
+    write:
+        category: http.wire-log
+        level: INFO
+        chunk-size: 0
+
+server:
+    port: 8080
+
+error:
+  messages:
+    paymentNotFound:
+      userMessage: Payment not found.
+      developerMessage: Payment not found by id in repository.
+    paymentsNotFound:
+      userMessage: Payments not found.
+      developerMessage: Payments not found in repository.
+    paymentTypeNotYetSupported:
+      userMessage: This payment type is not yet supported.
+      developerMessage: Payment Type not yet implemented in the API.
+    paymentError:
+      userMessage: "Something hasn't gone as planned. Sorry about that :("
+      developerMessage: "Error $12X1sdG!23fS"
