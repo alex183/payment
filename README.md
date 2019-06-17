@@ -3,7 +3,7 @@
 In order to run this project, you will need gradle(version 4.5):
 
     gradle build
-    java -jar payment.jar
+    java -jar payment-1.0.0.jar
 
 # Documentation
 All documentation regarding the usage of the API, including requests, responses and status codes can be found in 'swagger' file. With the open api documentation found, you can access it by using editor.swagger
